@@ -52,10 +52,11 @@ public class Guillotine extends javax.swing.JFrame {
     }
     
     private void icoLoad() {
-        java.net.URL url = ClassLoader.getSystemResource("smith/tech/Abercrombie Logo2.png");
+        java.net.URL url = ClassLoader.getSystemResource("smith/tech/Abercrombie Logo3.png");
         
         Toolkit kit = Toolkit.getDefaultToolkit();
         Image img = kit.createImage(url);
+        //img.setSize(400);
         setIconImage(img);
     }
     
