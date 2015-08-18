@@ -17,11 +17,11 @@ public class Users {
     //declare initial variables
     private String userName; //username
     private String name; //full name
+    private String firstN;
+    private String lastN;
     private String status;
     private boolean added;
     private int ID;
-    //private static Users next;
-    //private static Users travel;
     
     /*
     *Constructor - create initial class
@@ -52,7 +52,18 @@ public class Users {
      * @param FN 
      */
     public void setName(String FN) {
+        String delims = "[ ]";
+        String sep[] = FN.split(delims);
         name = FN;
+        firstN = sep[0];
+        lastN = sep[(sep.length-1)];
+        
+        System.out.println("First name: " + firstN);
+        System.out.println("Last name: " + lastN);
+    }
+    
+    public String getLast() {
+        return lastN;
     }
     
     public void setAdd(){
@@ -130,8 +141,10 @@ public class Users {
         status = "Current";
         if (Guillotine.mode == Guillotine.USERNAME)
             Clip.copy(userName);
-        else
+        else if (Guillotine.mode == Guillotine.NAME)
             Clip.copy(name);
+        else
+            Clip.copy(lastN);
     }
             
     public static void printList(List<Users> head) {
