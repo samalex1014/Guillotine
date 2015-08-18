@@ -33,6 +33,7 @@ public class Guillotine extends javax.swing.JFrame {
     Vector newData = new Vector();
     static int USERNAME = 1;
     static int NAME = 2;
+    static int LASTNAME = 3;
     static int mode = USERNAME;
 
     private String getCurrent() {
@@ -43,9 +44,39 @@ public class Guillotine extends javax.swing.JFrame {
             {
                 if (mode == USERNAME)
                     return head[i].getUN();
-                else
+                else if (mode == NAME)
                     return head[i].getName();
+                else if (mode == LASTNAME)
+                    return head[i].getLast();
             }
+        }
+        
+        return null;
+    }
+    
+    private String getCurrentName() {
+        for (int i = 0; i < head.length; i++)
+        {
+            if (head[i].current())
+            {
+                return head[i].getName();
+            }
+        }
+        
+        return null;
+    }
+    
+    private void updateLabels() {
+        currentData.setText(getCurrent());
+        UNDisplay.setText(getCurrentUN());
+        NameDisplay.setText(getCurrentName());
+    }
+    
+    private String getCurrentUN() {
+        for (int i=0; i < head.length; i++)
+        {
+            if (head[i].current())
+                return head[i].getUN();
         }
         
         return null;
@@ -105,6 +136,9 @@ public class Guillotine extends javax.swing.JFrame {
         
         Clip.copy(finalStat);
         
+        NameDisplay.show(false);
+        UNDisplay.show(false);
+        jLabel2.show(false);
         jButton6.show(false);
         jButton5.show(false);
         jButton7.show(true);
@@ -129,7 +163,10 @@ public class Guillotine extends javax.swing.JFrame {
             
         }
         
-        currentData.setText(getCurrent());
+        UNDisplay.show(true);
+        NameDisplay.show(true);
+        jLabel2.show(true);
+        updateLabels();
         updateList();
     }
     
@@ -149,12 +186,20 @@ public class Guillotine extends javax.swing.JFrame {
         if (mode == USERNAME)
         {
             switchToName.show(true);
+            switchToLN.show(true);
             switchToUN.show(false);
+        }
+        else if (mode == NAME)
+        {
+            switchToUN.show(true);
+            switchToLN.show(true);
+            switchToName.show(false);
         }
         else
         {
             switchToUN.show(true);
-            switchToName.show(false);
+            switchToName.show(true);
+            switchToLN.show(false);
         }
     }
 
@@ -176,6 +221,8 @@ public class Guillotine extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jButton7 = new javax.swing.JButton();
+        UNDisplay = new javax.swing.JLabel();
+        NameDisplay = new javax.swing.JLabel();
         editDataFiles = new javax.swing.JDesktopPane();
         jPanel3 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
@@ -194,6 +241,7 @@ public class Guillotine extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         switchToName = new javax.swing.JMenuItem();
         switchToUN = new javax.swing.JMenuItem();
+        switchToLN = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         contentMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -203,7 +251,7 @@ public class Guillotine extends javax.swing.JFrame {
         mainUN.show(false);
         mainUN.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("User Name:");
+        jLabel2.setText("Current:");
 
         jButton5.setText("Removed");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -219,12 +267,14 @@ public class Guillotine extends javax.swing.JFrame {
             }
         });
 
+        jList1.setBackground(new java.awt.Color(204, 204, 255));
         jList1.setModel(new javax.swing.AbstractListModel() {
             //String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return data.length; }
             public Object getElementAt(int i) { return data[i]; }
         });
         jScrollPane1.setViewportView(jList1);
+        jList1.setListData(newData);
 
         jButton7.setText("Begin Again");
         jButton7.show(false);
@@ -234,6 +284,12 @@ public class Guillotine extends javax.swing.JFrame {
             }
         });
 
+        UNDisplay.setText("jLabel3");
+        UNDisplay.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        NameDisplay.setText("jLabel3");
+        NameDisplay.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -241,36 +297,50 @@ public class Guillotine extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
-                        .addComponent(jButton5)
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton6))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(150, 150, 150)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton7)
-                            .addComponent(currentData, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(45, Short.MAX_VALUE))
+                            .addComponent(currentData, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(202, 202, 202)
+                        .addComponent(jButton7))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(123, 123, 123)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jButton5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton6)
+                                .addGap(103, 103, 103))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(UNDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(NameDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(45, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(currentData, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(currentData, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(UNDisplay)
+                            .addComponent(NameDisplay))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton6)
+                            .addComponent(jButton5)))
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton7)
-                .addGap(82, 82, 82))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         mainUN.add(jPanel4, java.awt.BorderLayout.CENTER);
@@ -431,6 +501,15 @@ public class Guillotine extends javax.swing.JFrame {
         });
         editMenu.add(switchToUN);
 
+        switchToLN.setText("Switch to Lastnames");
+        switchToLN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switchToLNActionPerformed(evt);
+            }
+        });
+        editMenu.add(switchToLN);
+        switchToLN.show(false);
+
         menuBar.add(editMenu);
 
         helpMenu.setMnemonic('h');
@@ -523,7 +602,7 @@ public class Guillotine extends javax.swing.JFrame {
             if (head[i].notChecked())
             {
                 head[i].setCurrent();
-                currentData.setText(getCurrent());
+                updateLabels();
                 end = false;
                 break;
             }
@@ -554,7 +633,7 @@ public class Guillotine extends javax.swing.JFrame {
         
         editOpt();
         
-        currentData.setText(getCurrent());
+        updateLabels();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -574,7 +653,7 @@ public class Guillotine extends javax.swing.JFrame {
             if (head[i].notChecked())
             {
                 head[i].setCurrent();
-                currentData.setText(getCurrent());
+                updateLabels();
                 end = false;
                 break;
             }
@@ -619,6 +698,14 @@ public class Guillotine extends javax.swing.JFrame {
         beginAgain();
     }//GEN-LAST:event_switchToUNActionPerformed
 
+    private void switchToLNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchToLNActionPerformed
+        mode = LASTNAME;
+        
+        editOpt();
+        
+        beginAgain();
+    }//GEN-LAST:event_switchToLNActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -655,6 +742,8 @@ public class Guillotine extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel NameDisplay;
+    private javax.swing.JLabel UNDisplay;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem contentMenuItem;
     private javax.swing.JLabel currentData;
@@ -683,6 +772,7 @@ public class Guillotine extends javax.swing.JFrame {
     private javax.swing.JDesktopPane mainUN;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem switchToLN;
     private javax.swing.JMenuItem switchToName;
     private javax.swing.JMenuItem switchToUN;
     // End of variables declaration//GEN-END:variables
